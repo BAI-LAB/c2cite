@@ -1,0 +1,39 @@
+{
+    "cutoff_len": 500,
+    "save_step": 1000,
+    "train_lora_candidate_num": 1,
+    "train_lora_simultaneously_num": 1,
+    "train_strategy": "optim",
+    "evaluate_result": "/yy21/MoE-PEFT/result",
+    "lora": [
+        {
+            "name": "dynamictest41",
+            "task_name": "qam",
+            "optim": "adamw",
+            "scheduler_type": "constant",
+            "warmup_steps": 0,
+            "lr": 2e-4,
+            "batch_size": 4,
+            "micro_batch_size": 4,
+            "evaluate_batch_size": 1,
+            "num_epochs": 6,
+            "r": 8,
+            "lora_alpha": 16,
+            "lora_dropout": 0.05,
+            "target_modules": {
+                "q_proj": true,
+                "k_proj": true,
+                "v_proj": true,
+                "o_proj": true,
+                "gate_proj": true,
+                "down_proj": true,
+                "up_proj": true
+            },
+            "routing_strategy": "",
+            "group_by_length": false,
+            "atten_mat_coin": 0,
+            "router_coin": 0,
+            "cite_coin": 0
+        }
+    ]
+}
