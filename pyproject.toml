@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "moe_peft"
+version = "2.0.0"
+description = "An Efficient LLM Fine-Tuning Factory Optimized for MoE PEFT"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "torch>=2.3.0,<2.5.0",
+    "datasets",
+    "evaluate",
+    "accelerate",
+    "transformers>=4.44.0,<4.46.0",
+    "sentencepiece",
+    "huggingface_hub",
+    "scikit-learn",
+    "tiktoken",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/TUDB-Labs/MoE-PEFT"
+"Bug Tracker" = "https://github.com/TUDB-Labs/MoE-PEFT/issues"
+
+[tool.setuptools.packages.find]
+include = ["moe_peft*"]
