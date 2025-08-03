@@ -32,9 +32,3 @@ python c2cite.py --dir ./checkpoint --log_file ./logs --verbose --seed 42 --attn
 ``````
 ***Note***:   **Do not** change the information in the **train config** after training step, or it won't find the right adapter.
 
-To start training c2-cite, use the following command:
-
-```bash
-
-```
-
