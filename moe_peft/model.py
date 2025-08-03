@@ -706,17 +706,17 @@ class LLMModel(torch.nn.Module):
                 input_args.batch_cites[idx] = new_cites
                 input_args.batch_cites_value[idx] = new_cites_v
             if output_data.aux_loss is None:
-                output_data.aux_loss = self.attn_mat_coin * self.attention_loss_fn(attention_matrixs, causal_mask, input_args.batch_cites, input_args.batch_prompt_len)
+                output_data.aux_loss = self.attn_mat_coin * 0.01 * self.attention_loss_fn(attention_matrixs, causal_mask, input_args.batch_cites, input_args.batch_prompt_len)
             else:
-                output_data.aux_loss += self.attn_mat_coin * self.attention_loss_fn(attention_matrixs, causal_mask, input_args.batch_cites, input_args.batch_prompt_len)
+                output_data.aux_loss += self.attn_mat_coin * 0.01 * self.attention_loss_fn(attention_matrixs, causal_mask, input_args.batch_cites, input_args.batch_prompt_len)
             print(f"1:{output_data.aux_loss}")
             for idx in range(len(input_args.batch_cites)):
                 if len(input_args.batch_cites[idx]) > len(input_args.batch_cites_value[idx]):
                     input_args.batch_cites[idx] = input_args.batch_cites[idx][:-1]
-            output_data.aux_loss += self.router_coin * self.compute_route_loss(route_logits, input_args.batch_cites)#router的label中，cite位置的是1，其他是0
+            output_data.aux_loss += self.router_coin * 10 * self.compute_route_loss(route_logits, input_args.batch_cites)#router的label中，cite位置的是1，其他是0
             print(f"2:{output_data.aux_loss}")
             #output_data.aux_loss += self.cite_coin * self.compute_cite_loss2(hidden_states, input_args.batch_cites,input_args.batch_cites_value,batch_doc_embed)#router的label中，cite位置的是1，其他是0
-            output_data.aux_loss += self.cite_coin * self.compute_cite_loss(cite_logits, input_args.batch_cites,input_args.batch_cites_value)#router的label中，cite位置的是1，其他是0
+            output_data.aux_loss += self.cite_coin * 100 * self.compute_cite_loss(cite_logits, input_args.batch_cites,input_args.batch_cites_value)#router的label中，cite位置的是1，其他是0
             print(f"3:{output_data.aux_loss}")
         return output
 

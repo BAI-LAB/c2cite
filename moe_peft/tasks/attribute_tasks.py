@@ -6,6 +6,7 @@ import datasets as hf_datasets
 import torch
 import json
 import re
+import os
 from tqdm import tqdm
 
 from transformers import BertTokenizer, BertModel
@@ -38,8 +39,11 @@ class ASQA(AttributedAnswerTask):
         few_shot = False #################################
 
         num_docs = 5
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        relative_path = "../../dataset/ALCE-data/asqa_eval_gtr_top100.json"  # 向上两级再进入dataset目录
+        file_path = os.path.join(current_dir, relative_path)
 
-        with open(path if path is not None else "/yy21/MoE-PEFT/dataset/asqa/asqa_eval_gtr_top100.json",'r',encoding='utf-8') as file:
+        with open(path if path is not None else file_path,'r',encoding='utf-8') as file:
             data = json.load(file)
         logging.info("Preparing data for ASQA")
         ret: List[InputData] = []
@@ -103,7 +107,10 @@ class ELI5(AttributedAnswerTask):
                      ) -> List[InputData]:
         few_shot = False ##############
         num_docs = 5
-        with open(path if path is not None else "/yy21/MoE-PEFT/dataset/eli5/eli5_eval_bm25_top100.json",'r',encoding='utf-8') as file:
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        relative_path = "../../dataset/ALCE-data/eli5_eval_bm25_top100.json"  # 向上两级再进入dataset目录
+        file_path = os.path.join(current_dir, relative_path)
+        with open(path if path is not None else file_path,'r',encoding='utf-8') as file:
             data = json.load(file)
         logging.info("Preparing data for ELI5")
         ret: List[InputData] = []
@@ -157,7 +164,10 @@ class Qampari(AttributedAnswerTask):
                      ) -> List[InputData]:
         few_shot = False ##############
         num_docs = 5
-        with open(path if path is not None else "/yy21/MoE-PEFT/dataset/qampari/qampari_eval_gtr_top100.json",'r',encoding='utf-8') as file:
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        relative_path = "../../dataset/ALCE-data/qampari_eval_gtr_top100.json"  # 向上两级再进入dataset目录
+        file_path = os.path.join(current_dir, relative_path)
+        with open(path if path is not None else file_path,'r',encoding='utf-8') as file:
             data = json.load(file)
         logging.info("Preparing data for Qampari")
         ret: List[InputData] = []
@@ -343,8 +353,9 @@ class Front(AttributedAnswerTask):
     
 
 class Synsciqa(AttributedAnswerTask):
-    def __init__(self):
+    def __init__(self, sub):
         super().__init__()
+        self.sub = sub
         self.inst = lambda query: f"Can you respond to the question {query} by only relying on the sources. Ignore all sources that do not provide an answer to the question.                    Do not include any knowledge from outside of these sources. Only write a single paragraph. Each sentence must end with the reference in the form of (author, year, page number). Stricly follow this format. Citing multiple sources in one sentence is not allowed.                    However, if no source addresses the question, admit truthfully that no answer can be given.                    Answer the question concisly and avoid being verbose."
         self.inst_a = 'Write an accurate, engaging, and concise answer for the given question using only the provided search results (some of which might be irrelevant) and cite them properly. Use an unbiased and journalistic tone. Always cite for any factual claim. When citing several search results, use [1][2][3]. Cite at least one document and at most three documents in each sentence. If multiple documents support the sentence, only cite a minimum sufficient subset of the documents.'
         self.inst_special_token = 'Write an accurate, engaging, and concise answer for the given question using only the provided search results (some of which might be irrelevant) and cite them properly. Use an unbiased and journalistic tone. Always cite for any factual claim. Cite at least one document and at most three documents in each sentence. If multiple documents support the sentence, only cite a minimum sufficient subset of the documents.'
@@ -354,8 +365,19 @@ class Synsciqa(AttributedAnswerTask):
     def loading_data(self, is_train: bool = False, few_shot: bool = True
                      ) -> List[InputData]:
         few_shot = False ##############
-        with open("/yy21/MoE-PEFT/dataset/synsciqa++/SynSciQA++.json", 'r',encoding='utf-8') as file:
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+          # 向上两级再进入dataset目录
+        
+        if self.sub == 'synsci':
+            relative_path = "../../dataset/SynSciQA/SynSciQA.json"
+        elif self.sub == 'synsci+':
+            relative_path = "../../dataset/SynSciQA/SynSciQA+.json"
+        elif self.sub == 'synsci++':
+            relative_path = "../../dataset/SynSciQA/SynSciQA++.json"
+        file_path = os.path.join(current_dir, relative_path)
+        with open(file_path, 'r',encoding='utf-8') as file:
             data = json.load(file)
+
         logging.info("Preparing data for SynsciQA")
         ret: List[InputData] = []
         #cnt = 10
@@ -532,7 +554,9 @@ def update_task_dict(task_dict):
             "eli5": ELI5(),
             "front-s": Front('sft'),
             "front-d": Front('dpo'),
-            "synsci": Synsciqa(),
+            "synsci": Synsciqa('synsci'),
+            "synsci+": Synsciqa('synsci+'),
+            "synsci++": Synsciqa('synsci++'),
             "rein": Reinf(),
             "qam": Qampari()
         }
