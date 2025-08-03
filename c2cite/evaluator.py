@@ -416,32 +416,13 @@ def _generate_then_compute_metrics(
         )
         for data in running_jobs:
             current_configs[0].data_.append(data)
-        """cnt -= 1
-        cases.append(
-            {
-                "query":dispatch_args[0][0].inputs.split("\n\nQusetion:")[1],
-                "docs": dispatch_args[0][0].citations,
-                "label": dispatch_args[0][0].labels,
-                "output": outputs[0],
-            }
-        )
-        if cnt == 0:
-            with open("/yy21/MoE-PEFT/cases/qsum_normal.json", 'w', encoding='utf-8') as f:
-                json.dump(cases, f, ensure_ascii=False, indent=4)
-            print(f"finish 50!")
-            input()"""
-        #print(f"Query:{dispatch_args[0][0].query}\n")
-        #for fk in dispatch_args[0][0].citations:
-            #print(f"{fk}")
-        #print(f"\nlabel:{dispatch_args[0][0].labels}")
+
         print(f"\noutput:{outputs[0]}\n")
-        #input()
         metric.add_batch(
             {
                 'output': outputs[0],
                 'qa_pairs': dispatch_args[0][0].grounds,
                 'answer': dispatch_args[0][0].labels,
-                #'docs': dispatch_args[0][0].citation_tokens,
                 'docs': dispatch_args[0][0].citations,
                 'query': dispatch_args[0][0].query,
             }

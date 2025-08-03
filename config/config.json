@@ -1,22 +1,22 @@
 {
-    "cutoff_len": 2400,
-    "save_step": 1000,
+    "cutoff_len": 1900,
+    "save_step": 500,
     "train_lora_candidate_num": 1,
     "train_lora_simultaneously_num": 1,
     "train_strategy": "optim",
-    "evaluate_result": "/yy21/MoE-PEFT/result",
+    "evaluate_result": "./result",
     "lora": [
         {
-            "name": "test",
-            "task_name": "asqa",
+            "name": "c2cite++",
+            "task_name": "synsci++",
             "optim": "adamw",
             "scheduler_type": "constant",
             "warmup_steps": 0,
-            "lr": 2e-4,
-            "batch_size": 8,
-            "micro_batch_size": 4,
+            "lr": 1e-4,
+            "batch_size": 1,
+            "micro_batch_size": 1,
             "evaluate_batch_size": 1,
-            "num_epochs": 3,
+            "num_epochs": 4,
             "r": 8,
             "lora_alpha": 16,
             "lora_dropout": 0.05,
@@ -30,7 +30,10 @@
                 "up_proj": true
             },
             "routing_strategy": "",
-            "group_by_length": false
+            "group_by_length": false,
+            "atten_mat_coin": 0.1,
+            "router_coin": 0.1,
+            "cite_coin": 0.2
         }
     ]
 }
